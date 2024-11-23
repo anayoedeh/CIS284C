@@ -1,0 +1,136 @@
+resources/editprofile.gtl
+  1  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+  2  <!-- Copyright 2017 Google Inc. -->
+  3  <html>
+  4  <head>
+  5  <title>Gruyere: Profile</title>
+  6  [[include:base.css]][[/include:base.css]]
+  7  </head>
+  8  
+  9  <body>
+ 10  [[include:menubar.gtl]][[/include:menubar.gtl]]
+ 11  <div>
+ 12  <h2>Gruyere: Profile</h2>
+ 13  </div>
+ 14  
+ 15  <div class='content'>
+ 16  [[if:_cookie.is_admin]]
+ 17    <h3>Add a new account or edit an existing account.</h3>
+ 18  [[/if:_cookie.is_admin]]
+ 19  [[if:!_cookie.is_admin]]
+ 20    <h3>Edit your profile.</h3>
+ 21  [[/if:!_cookie.is_admin]]
+ 22  [[if:_message]]
+ 23  <div class='message'>{{_message}}</div>
+ 24  [[/if:_message]]
+ 25  
+ 26  <form method='get' action='/{{_unique_id}}/saveprofile'>
+ 27  <input type='hidden' name='action' value='update'>
+ 28  <table>
+ 29    <tr><td>
+ 30      User id:
+ 31    </td><td>
+ 32  [[if:_cookie.is_admin]]
+ 33    [[if:uid]]
+ 34      <input type='hidden' name='uid' value='{{uid.0}}'>
+ 35      {{uid.0}}
+ 36    [[/if:uid]]
+ 37    [[if:!uid]]
+ 38      <input type='hidden' name='uid' value='{{_cookie.uid}}'>
+ 39      {{_cookie.uid}}
+ 40    [[/if:!uid]]
+ 41  [[/if:_cookie.is_admin]]
+ 42  [[if:!_cookie.is_admin]]
+ 43    [[if:_cookie.uid]]
+ 44      {{_cookie.uid}}
+ 45    [[/if:_cookie.uid]]
+ 46    [[if:!_cookie.uid]]
+ 47        &lt;not logged in&gt;
+ 48    [[/if:!_cookie.uid]]
+ 49  [[/if:!_cookie.is_admin]]
+ 50    </td></tr>
+ 51  <tr><td>
+ 52      User name:
+ 53    </td><td>
+ 54      <input type='text'
+ 55        value='[[if:uid]]{{_db.*uid.name:text}}[[/if:uid]][[if:!uid]]{{_profile.name:text}}[[/if:!uid]]'
+ 56        name='name' maxlength='16'>
+ 57  </td></tr>
+ 58  <tr><td>
+ 59      OLD Password:
+ 60    </td><td>
+ 61      <input type='password' name='oldpw'>
+ 62    </td><td>
+ 63  </td></tr>
+ 64  <tr><td>
+ 65      NEW Password:
+ 66    </td><td>
+ 67      <input type='password' name='pw'>
+ 68      <br><span style="color:red"><b>WARNING: Gruyere is not secure.<br>
+ 69      Do not use a password that you use for any real service.</b></span>
+ 70  </td></tr>
+ 71  <tr><td>
+ 72      Icon:
+ 73    </td><td>
+ 74      <input type='text'
+ 75        value='[[if:uid]]{{_db.*uid.icon:text}}[[/if:uid]][[if:!uid]]{{_profile.icon:text}}[[/if:!uid]]'
+ 76        value='{{_profile.icon:text}}'
+ 77        name='icon'>
+ 78      (32x32 image, URL to image location)
+ 79  </td></tr>
+ 80  <tr><td>
+ 81      Homepage:
+ 82    </td><td>
+ 83      <input type='text' size='50'
+ 84        value='[[if:uid]]{{_db.*uid.web_site:text}}[[/if:uid]][[if:!uid]]{{_profile.web_site:text}}[[/if:!uid]]'
+ 85        name='web_site'>
+ 86  </td></tr>
+ 87  <tr><td>
+ 88      Profile Color:
+ 89    </td><td>
+ 90      <input type='text'
+ 91        value='[[if:uid]]{{_db.*uid.color:text}}[[/if:uid]][[if:!uid]]{{_profile.color:text}}[[/if:!uid]]'
+ 92        name='color'>
+ 93  </td></tr>
+ 94  <tr><td>
+ 95      Private Snippet:
+ 96    </td><td>
+ 97      <textarea name='private_snippet' rows='10' style='width:100%'>[[if:uid]]{{_db.*uid.private_snippet}}[[/if:uid]][[if:!uid]]{{_profile.private_snippet}}[[/if:!uid]]</textarea>
+ 98  </td></tr>
+ 99  [[if:_cookie.is_admin]]
+100  <tr><td>
+101      Is admin:
+102    </td><td>
+103      <input type='radio'
+104        [[if:uid]][[if:_db.*uid.is_admin]]checked[[/if:_db.*uid.is_admin]][[/if:uid]]
+105        [[if:!uid]][[if:_profile.is_admin]]checked[[/if:_profile.is_admin]][[/if:!uid]]
+106        name='is_admin' value='True'>Yes
+107      <input type='radio'
+108        [[if:uid]][[if:!_db.*uid.is_admin]]checked[[/if:!_db.*uid.is_admin]][[/if:uid]]
+109        [[if:!uid]][[if:!_profile.is_admin]]checked[[/if:!_profile.is_admin]][[/if:!uid]]
+110        name='is_admin' value='False'>No
+111  </td></tr>
+112  <tr><td>
+113      Is author:
+114    </td><td>
+115      <input type='radio'
+116        [[if:uid]][[if:_db.*uid.is_author]]checked[[/if:_db.*uid.is_author]][[/if:uid]]
+117        [[if:!uid]][[if:_profile.is_author]]checked[[/if:_profile.is_author]][[/if:!uid]]
+118        name='is_author' value='True'>Yes
+119      <input type='radio'
+120        [[if:uid]][[if:!_db.*uid.is_author]]checked[[/if:!_db.*uid.is_author]][[/if:uid]]
+121        [[if:!uid]][[if:!_profile.is_author]]checked[[/if:!_profile.is_author]][[/if:!uid]]
+122        name='is_author' value='False'>No
+123  </td></tr>
+124  [[/if:_cookie.is_admin]]
+125  
+126  <tr><td></td><td align='left'>
+127      <input type='submit' value='Update'>
+128  </td></tr>
+129  </table>
+130  </form>
+131  </div>
+132  
+133  </body>
+134  
+135  </html>
